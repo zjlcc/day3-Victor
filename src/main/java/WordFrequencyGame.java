@@ -11,36 +11,49 @@ public class WordFrequencyGame {
             return sentence + " 1";
         } else {
             try {
-                //split the input string with 1 to n pieces of spaces
-                String[] words = sentence.split(SPACE_REGEX);
+                List<WordFrequency> wordFrequencies = getWordFrequencies(sentence);
 
-                List<WordFrequency> wordFrequencies = new ArrayList<>();
-                for (String word : words) {
-                    WordFrequency wordFrequency = new WordFrequency(word, 1);
-                    wordFrequencies.add(wordFrequency);
-                }
-                //get the map for the next step of sizing the same word
-                Map<String, List<WordFrequency>> wordToWordFrequencies = getGroupedWordFrequencies(wordFrequencies);
+                wordFrequencies = getProcessedWordFrequencies(wordFrequencies);
 
-                List<WordFrequency> processedWordFrequencies = new ArrayList<>();
-                for (Map.Entry<String, List<WordFrequency>> entry : wordToWordFrequencies.entrySet()) {
-                    WordFrequency wordFrequency = new WordFrequency(entry.getKey(), entry.getValue().size());
-                    processedWordFrequencies.add(wordFrequency);
-                }
-                wordFrequencies = processedWordFrequencies;
-
-                wordFrequencies.sort((wordFrequency, nextWordFrequency) -> nextWordFrequency.getWordCount() - wordFrequency.getWordCount());
-
-                StringJoiner joiner = new StringJoiner(LINE_BREAK);
-                for (WordFrequency wordFrequency : wordFrequencies) {
-                    String s = wordFrequency.getValue() + SPACE + wordFrequency.getWordCount();
-                    joiner.add(s);
-                }
-                return joiner.toString();
+                return getFormattedWordFrequencies(wordFrequencies);
             } catch (Exception e) {
                 return CALCULATE_ERROR + e;
             }
         }
+    }
+
+    private String getFormattedWordFrequencies(List<WordFrequency> wordFrequencies) {
+        StringJoiner joiner = new StringJoiner(LINE_BREAK);
+        for (WordFrequency wordFrequency : wordFrequencies) {
+            String s = wordFrequency.getValue() + SPACE + wordFrequency.getWordCount();
+            joiner.add(s);
+        }
+        return joiner.toString();
+    }
+
+    private List<WordFrequency> getProcessedWordFrequencies(List<WordFrequency> wordFrequencies) {
+        Map<String, List<WordFrequency>> wordToWordFrequencies = getGroupedWordFrequencies(wordFrequencies);
+
+        List<WordFrequency> processedWordFrequencies = new ArrayList<>();
+        for (Map.Entry<String, List<WordFrequency>> entry : wordToWordFrequencies.entrySet()) {
+            WordFrequency wordFrequency = new WordFrequency(entry.getKey(), entry.getValue().size());
+            processedWordFrequencies.add(wordFrequency);
+        }
+        wordFrequencies = processedWordFrequencies;
+
+        wordFrequencies.sort((wordFrequency, nextWordFrequency) -> nextWordFrequency.getWordCount() - wordFrequency.getWordCount());
+        return wordFrequencies;
+    }
+
+    private List<WordFrequency> getWordFrequencies(String sentence) {
+        String[] words = sentence.split(SPACE_REGEX);
+
+        List<WordFrequency> wordFrequencies = new ArrayList<>();
+        for (String word : words) {
+            WordFrequency wordFrequency = new WordFrequency(word, 1);
+            wordFrequencies.add(wordFrequency);
+        }
+        return wordFrequencies;
     }
 
     private Map<String, List<WordFrequency>> getGroupedWordFrequencies(List<WordFrequency> wordFrequencies) {
