@@ -10,18 +10,14 @@ public class WordFrequencyGame {
     public String getWordFrequency(String sentence) {
         if (sentence.split(SPACE_REGEX).length == 1) {
             return sentence + " 1";
-        } else {
-            try {
-                List<WordFrequency> wordFrequencies = getWordFrequencies(sentence);
-
-                wordFrequencies = getProcessedWordFrequencies(wordFrequencies);
-
-                return getFormattedWordFrequencies(wordFrequencies);
-            } catch (Exception e) {
-                return CALCULATE_ERROR + e;
-            }
+        }
+        try {
+            return getFormattedWordFrequencies(getProcessedWordFrequencies(getWordFrequencies(sentence)));
+        } catch (Exception e) {
+            return CALCULATE_ERROR + e;
         }
     }
+
 
     private String getFormattedWordFrequencies(List<WordFrequency> wordFrequencies) {
         return wordFrequencies.stream()
