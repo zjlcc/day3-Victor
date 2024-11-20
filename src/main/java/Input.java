@@ -7,7 +7,6 @@ public class Input {
         this.count =i;
     }
 
-
     public String getValue() {
         return this.value;
     }
