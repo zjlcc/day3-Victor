@@ -20,20 +20,20 @@ public class WordFrequencyGame {
                     wordFrequencies.add(wordFrequency);
                 }
                 //get the map for the next step of sizing the same word
-                Map<String, List<WordFrequency>> map = getListMap(wordFrequencies);
+                Map<String, List<WordFrequency>> wordToWordFrequencies = getGroupedWordFrequencies(wordFrequencies);
 
-                List<WordFrequency> list = new ArrayList<>();
-                for (Map.Entry<String, List<WordFrequency>> entry : map.entrySet()) {
+                List<WordFrequency> processedWordFrequencies = new ArrayList<>();
+                for (Map.Entry<String, List<WordFrequency>> entry : wordToWordFrequencies.entrySet()) {
                     WordFrequency wordFrequency = new WordFrequency(entry.getKey(), entry.getValue().size());
-                    list.add(wordFrequency);
+                    processedWordFrequencies.add(wordFrequency);
                 }
-                wordFrequencies = list;
+                wordFrequencies = processedWordFrequencies;
 
-                wordFrequencies.sort((w1, w2) -> w2.getWordCount() - w1.getWordCount());
+                wordFrequencies.sort((wordFrequency, nextWordFrequency) -> nextWordFrequency.getWordCount() - wordFrequency.getWordCount());
 
                 StringJoiner joiner = new StringJoiner(LINE_BREAK);
-                for (WordFrequency w : wordFrequencies) {
-                    String s = w.getValue() + SPACE + w.getWordCount();
+                for (WordFrequency wordFrequency : wordFrequencies) {
+                    String s = wordFrequency.getValue() + SPACE + wordFrequency.getWordCount();
                     joiner.add(s);
                 }
                 return joiner.toString();
@@ -43,18 +43,18 @@ public class WordFrequencyGame {
         }
     }
 
-    private Map<String, List<WordFrequency>> getListMap(List<WordFrequency> wordFrequencies) {
-        Map<String, List<WordFrequency>> map = new HashMap<>();
+    private Map<String, List<WordFrequency>> getGroupedWordFrequencies(List<WordFrequency> wordFrequencies) {
+        Map<String, List<WordFrequency>> groupedWordFrequencies = new HashMap<>();
         for (WordFrequency wordFrequency : wordFrequencies) {
-//       map.computeIfAbsent(input.getValue(), k -> new ArrayList<>()).add(input);
-            if (!map.containsKey(wordFrequency.getValue())) {
+//       groupedWordFrequencies.computeIfAbsent(input.getValue(), k -> new ArrayList<>()).add(input);
+            if (!groupedWordFrequencies.containsKey(wordFrequency.getValue())) {
                 ArrayList classifiedWordFrequencies = new ArrayList<>();
                 classifiedWordFrequencies.add(wordFrequency);
-                map.put(wordFrequency.getValue(), classifiedWordFrequencies);
+                groupedWordFrequencies.put(wordFrequency.getValue(), classifiedWordFrequencies);
             } else {
-                map.get(wordFrequency.getValue()).add(wordFrequency);
+                groupedWordFrequencies.get(wordFrequency.getValue()).add(wordFrequency);
             }
         }
-        return map;
+        return groupedWordFrequencies;
     }
 }
