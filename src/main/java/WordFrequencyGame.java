@@ -15,7 +15,6 @@ public class WordFrequencyGame {
         }
     }
 
-
     private String getFormattedWordFrequencies(List<WordFrequency> wordFrequencies) {
         return wordFrequencies.stream()
                 .map(wordFrequency -> wordFrequency.getWord() + SPACE + wordFrequency.getWordCount())
