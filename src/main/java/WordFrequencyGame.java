@@ -8,9 +8,6 @@ public class WordFrequencyGame {
     public static final String SPACE = " ";
 
     public String getWordFrequency(String sentence) {
-        if (sentence.split(SPACE_REGEX).length == 1) {
-            return sentence + " 1";
-        }
         try {
             return getFormattedWordFrequencies(getProcessedWordFrequencies(getWordFrequencies(sentence)));
         } catch (Exception e) {
@@ -21,7 +18,7 @@ public class WordFrequencyGame {
 
     private String getFormattedWordFrequencies(List<WordFrequency> wordFrequencies) {
         return wordFrequencies.stream()
-                .map(w -> w.getValue() + SPACE + w.getWordCount())
+                .map(wordFrequency -> wordFrequency.getWord() + SPACE + wordFrequency.getWordCount())
                 .collect(Collectors.joining(LINE_BREAK));
     }
 
@@ -44,6 +41,6 @@ public class WordFrequencyGame {
 
     private Map<String, List<WordFrequency>> getGroupedWordFrequencies(List<WordFrequency> wordFrequencies) {
         return wordFrequencies.stream()
-                .collect(Collectors.groupingBy(WordFrequency::getValue));
+                .collect(Collectors.groupingBy(WordFrequency::getWord));
     }
 }
